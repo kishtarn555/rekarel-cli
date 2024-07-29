@@ -29,7 +29,8 @@ export class KarelDebugger {
             this.autoStepInterval = 0;
         }
     }
-    StartAutoStep() {
+    StartAutoStep(delay) {
+        this.delay = delay;
         this.autoStepInterval = window.setInterval(() => {
             if (!this.world.runtime.running) {
                 this.StopAutoStep();

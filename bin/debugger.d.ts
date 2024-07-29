@@ -17,7 +17,7 @@ export declare class KarelDebugger {
     StartRun(): void;
     RunTillEnd(): void;
     StopAutoStep(): void;
-    StartAutoStep(): void;
+    StartAutoStep(delay: number): void;
     Step(): void;
     StepOut(): void;
     StepOver(): void;

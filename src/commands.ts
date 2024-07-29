@@ -7,6 +7,8 @@ import { javaParser, pascalParser, compile, World} from "@rekarel/core"
 import * as fs from 'fs';
 import * as path from 'path';
 import { DOMParser } from '@xmldom/xmldom';
+import { KarelDebugger } from './debugger';
+import * as readline from 'readline'
 
 const program = new Command();
 
@@ -93,6 +95,53 @@ program
             });
         }
     });
+
+    
+program
+.command('run')
+.option('--debug','enables debug output')
+.option('-w, --world [world]','The world.in')
+.option('-s, --source [source]','The Karel source code')
+.description('runs file')
+.action(function(_, options) {
+    let source = fs.readFileSync(options.source, {encoding: 'utf-8'});
+    let compiled = null;
+    let rawSource=false;
+    if (source.endsWith('.kx')) {
+        compiled = JSON.parse(source);
+    } else {
+        compiled = compile(source);
+        rawSource = true;
+    }
+
+    let worldFile = fs.readFileSync(options.world, {encoding: 'utf-8'});
+    let worldXml = new DOMParser().parseFromString(worldFile, 'text/xml');
+    var world = new World(100, 100);
+    world.load(worldXml);
+
+    const karelDebugger = new KarelDebugger(world, {
+        code: rawSource? source: undefined
+    });
+
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+        prompt: '> '
+      });
+
+    rl.prompt();
+
+    karelDebugger.StartRun();
+
+    rl.on('line', (line) => {
+        const [command, ...args] = line.trim().split(' ');
+        if (command === "step") {
+            karelDebugger.Step();
+            return;
+        }
+    });
+    
+});
 
     
 program.parse(process.argv);
