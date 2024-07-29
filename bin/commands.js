@@ -13,7 +13,7 @@ program.command('compile')
     var _a;
     let parser = compile;
     if (options.language) {
-        switch (options.parser) {
+        switch (options.language) {
             case "java":
                 parser = javaParser;
                 break;

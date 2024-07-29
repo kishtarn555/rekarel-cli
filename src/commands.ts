@@ -20,7 +20,7 @@ program.command('compile')
     .action((source, options)=> {
         let parser = compile;
         if (options.language) {
-            switch(options.parser) {
+            switch(options.language) {
                 case "java":
                     parser = javaParser;
                     break;
