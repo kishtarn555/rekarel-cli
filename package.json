@@ -4,7 +4,7 @@
   "description": "CLI tool for karel",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx tsc"
+    "build": "npx tsc && npx rollup -c"
   },
   "type": "module",
   "author": "kishtarn",
@@ -16,10 +16,13 @@
   },
   "repository": "github:kishtarn555/rekarel-cli",
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^26.0.1",
+    "@rollup/plugin-node-resolve": "^15.2.3",
     "@types/node": "^22.0.0",
+    "rollup": "^4.19.1",
     "typescript": "^5.5.4"
   },
   "bin": {
-    "rekarel": "bin/commands.js"
+    "rekarel": "dist/commands.cjs"
   }
 }
