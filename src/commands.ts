@@ -151,7 +151,10 @@ program
             } else {
                 karelDebugger.Step();
             }
-        } else if (command === "exit") {
+        } else if (command === "future") {
+            karelDebugger.RunTillEnd();
+        }         
+        else if (command === "exit") {
             process.exit(0);          
         } else if (command === "output") {
             console.log(karelDebugger.Output());

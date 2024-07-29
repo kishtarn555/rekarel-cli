@@ -106,7 +106,6 @@ program
     let worldXml = new DOMParser().parseFromString(worldFile, 'text/xml');
     var world = new World(100, 100);
     world.load(worldXml);
-    world.runtime.debug = true;
     world.runtime.load(compiled);
     if (options.debug) {
         world.runtime.addEventListener('debug', function (ev) {
@@ -139,6 +138,9 @@ program
             else {
                 karelDebugger.Step();
             }
+        }
+        else if (command === "future") {
+            karelDebugger.RunTillEnd();
         }
         else if (command === "exit") {
             process.exit(0);
