@@ -144,10 +144,10 @@ program
             if (args.length > 0) {
                 const steps = parseInt(args[0], 10);
                 if (!isNaN(steps) && steps > 0) {
-
-                }else{
                     for (let i =0; i < steps; i++)
                         karelDebugger.Step();
+                }else{
+                    karelDebugger.Step();
                 } 
             } else {
                 karelDebugger.Step();
