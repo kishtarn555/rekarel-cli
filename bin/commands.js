@@ -34,20 +34,16 @@ program.command('compile')
                 console.error(`'${options.language}' is not recognized as a valid language. Options are 'pascal' or 'java'`);
         }
     }
-    try {
-        let output = (_a = options.output) !== null && _a !== void 0 ? _a : "a.kx";
-        let file = fs.readFileSync(source, { encoding: 'utf-8' });
-        let compiled = parser(file);
-        fs.writeFileSync(output, JSON.stringify(compiled));
-    }
-    catch (error) {
-        console.error(error);
-    }
+    let output = (_a = options.output) !== null && _a !== void 0 ? _a : "a.kx";
+    let file = fs.readFileSync(source, { encoding: 'utf-8' });
+    let compiled = parser(file);
+    fs.writeFileSync(output, JSON.stringify(compiled));
 });
 program
     .command('run <filename>')
     .option('--debug', 'enables debug output')
-    .option('-w, --world [world]', 'If specified, it reads the world from the file, otherwise it reads from stdin')
+    .option('-i, --input [worldIn]', 'If specified, it reads the world from the file, otherwise it reads from stdin')
+    .option('-o, --output [worldOut]', 'If specified, it writes the output to the file, otherwise it writes to stdout')
     .description('runs file')
     .action(function (filename, options) {
     var file = fs.readFileSync(filename, { encoding: 'utf-8' });
@@ -70,10 +66,15 @@ program
         world.runtime.load(compiled);
         while (world.runtime.step())
             ;
-        console.log(world.output());
+        if (options.output) {
+            fs.writeFileSync(options.output, world.output());
+        }
+        else {
+            console.log(world.output());
+        }
     }
-    if (options.world) {
-        let file = fs.readFileSync(options.world, { encoding: 'utf-8' });
+    if (options.input) {
+        let file = fs.readFileSync(options.input, { encoding: 'utf-8' });
         let worldXml = new DOMParser().parseFromString(file, 'text/xml');
         run(worldXml);
     }
