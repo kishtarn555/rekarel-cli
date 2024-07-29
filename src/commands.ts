@@ -146,7 +146,6 @@ program
             return;
         }
         if (command === "exit") {
-            karelDebugger.Step();
             process.exit(0);
             return;
         }
