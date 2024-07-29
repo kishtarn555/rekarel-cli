@@ -4,6 +4,7 @@ import { Command } from 'commander';
 import { javaParser, pascalParser, compile, World } from "@rekarel/core";
 import * as fs from 'fs';
 import { DOMParser } from '@xmldom/xmldom';
+import { version } from "../package.json";
 const program = new Command();
 function readStdin() {
     return new Promise(function (resolve, reject) {
@@ -14,7 +15,7 @@ function readStdin() {
             .on('end', chunk => resolve(chunks.join('')));
     });
 }
-program.version("cli-1.0.0; rekarel-1.0.0");
+program.version(version);
 program.command('compile')
     .argument('<source>', 'source code')
     .option('-l, --language <type>')

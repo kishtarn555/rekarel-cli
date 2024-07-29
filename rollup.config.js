@@ -1,13 +1,14 @@
 import commonjs from '@rollup/plugin-commonjs';
-import nodeResolve from '@rollup/plugin-node-resolve';
+import json from '@rollup/plugin-json';
 export default {
-  input: 'bin/commands.js',
+  input: 'bin/src/commands.js',
   output: {
     file: 'dist/commands.cjs',
     format: 'cjs'
   },
 
   plugins: [
-    commonjs()
+    commonjs(),
+    json()
   ]
 };
