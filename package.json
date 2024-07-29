@@ -1,0 +1,15 @@
+{
+  "name": "@rekarel/cli",
+  "version": "1.0.0",
+  "description": "CLI tool for karel",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "author": "kishtarn",
+  "license": "MIT",
+  "dependencies": {
+    "@rekarel/core": "^1.0.0"
+  }
+}
