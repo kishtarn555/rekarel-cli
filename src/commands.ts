@@ -7,7 +7,7 @@ import { javaParser, pascalParser, compile, World} from "@rekarel/core"
 import * as fs from 'fs';
 import * as path from 'path';
 import { DOMParser } from '@xmldom/xmldom';
-import { KarelDebugger } from './debugger';
+import { KarelDebugger } from './debugger.js';
 import * as readline from 'readline'
 
 const program = new Command();
@@ -98,7 +98,7 @@ program
 
     
 program
-.command('run')
+.command('debugger')
 .option('--debug','enables debug output')
 .option('-w, --world [world]','The world.in')
 .option('-s, --source [source]','The Karel source code')
