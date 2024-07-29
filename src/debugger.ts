@@ -73,6 +73,9 @@ export class KarelDebugger {
 
     Step() {
         const runtime = this.world.runtime;
+        if (this.lines.length > runtime.state.line) {
+            
+        }
         runtime.step();
         if (this.lines.length > runtime.state.line) {
             const pascal = /\@saltatela/g
@@ -81,6 +84,7 @@ export class KarelDebugger {
             if (pascal.test(text) || java.test(text)) {
                 this.StepOut();
             }
+            console.log("line ", text);
         }
     }
 

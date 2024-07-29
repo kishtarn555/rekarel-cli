@@ -54,6 +54,7 @@ export class KarelDebugger {
             if (pascal.test(text) || java.test(text)) {
                 this.StepOut();
             }
+            console.log("line ", text);
         }
     }
     StepOut() {
