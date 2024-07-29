@@ -91,6 +91,9 @@ export class KarelDebugger {
     RemoveBreakPoint(line) {
         this.breakpoints.delete(line);
     }
+    Output() {
+        return this.world.output();
+    }
     PerformAutoStep(ignoreBreakpoints = false) {
         const runtime = this.world.runtime;
         const result = runtime.step();

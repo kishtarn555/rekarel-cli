@@ -25,6 +25,7 @@ export declare class KarelDebugger {
     ClearBreakpoints(): void;
     AddBreakpoint(line: number): void;
     RemoveBreakPoint(line: number): void;
+    Output(): any;
     private PerformAutoStep;
     CheckForBreakPointOnCurrentLine(): boolean;
 }

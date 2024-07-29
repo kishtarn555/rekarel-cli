@@ -126,14 +126,26 @@ program
     rl.on('line', (line) => {
         const [command, ...args] = line.trim().split(' ');
         if (command === "step") {
-            karelDebugger.Step();
-            rl.prompt();
-            return;
+            if (args.length > 0) {
+                const steps = parseInt(args[0], 10);
+                if (!isNaN(steps) && steps > 0) {
+                }
+                else {
+                    for (let i = 0; i < steps; i++)
+                        karelDebugger.Step();
+                }
+            }
+            else {
+                karelDebugger.Step();
+            }
         }
-        if (command === "exit") {
+        else if (command === "exit") {
             process.exit(0);
-            return;
         }
+        else if (command === "output") {
+            console.log(karelDebugger.Output());
+        }
+        rl.prompt();
     });
 });
 program.parse(process.argv);

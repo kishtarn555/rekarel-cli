@@ -125,6 +125,10 @@ export class KarelDebugger {
         this.breakpoints.delete(line);
     }
 
+    Output() {
+        return this.world.output();
+    }
+
 
     private PerformAutoStep(ignoreBreakpoints: boolean = false) {
         const runtime = this.world.runtime;
