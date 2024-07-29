@@ -1,4 +1,7 @@
-// TypeScript (.ts)
+#!/usr/bin/env node
+
+"use strict";
+
 import { Command } from 'commander';
 import { javaParser, pascalParser, compile} from "@rekarel/core"
 import * as fs from 'fs';
@@ -40,3 +43,6 @@ program.command('compile')
         }
 
     });
+
+    
+program.parse(process.argv);

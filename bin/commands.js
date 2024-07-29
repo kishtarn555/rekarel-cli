@@ -1,4 +1,5 @@
-// TypeScript (.ts)
+#!/usr/bin/env node
+"use strict";
 import { Command } from 'commander';
 import { javaParser, pascalParser, compile } from "@rekarel/core";
 import * as fs from 'fs';
@@ -33,4 +34,5 @@ program.command('compile')
         console.error(error);
     }
 });
+program.parse(process.argv);
 //# sourceMappingURL=commands.js.map

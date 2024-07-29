@@ -16,6 +16,10 @@
   },
   "repository": "github:kishtarn555/rekarel-cli",
   "devDependencies": {
+    "@types/node": "^22.0.0",
     "typescript": "^5.5.4"
+  },
+  "bin": {
+    "rekarel": "bin/commands.js"
   }
 }
