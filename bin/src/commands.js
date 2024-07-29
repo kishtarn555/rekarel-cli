@@ -17,7 +17,7 @@ function readStdin() {
 }
 program.version(version);
 program.command('compile')
-    .argument('<source>', 'source code')
+    .arguments('<source>')
     .option('-l, --language <type>')
     .option('-o, --output [target]')
     .action((source, options) => {
