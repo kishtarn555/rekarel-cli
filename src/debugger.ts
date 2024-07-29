@@ -36,6 +36,7 @@ export class KarelDebugger {
         this.world.reset();
         let runtime = this.world.runtime;
         runtime.disableStackEvents = false;
+        runtime.reset();
         runtime.start();
     }
 
@@ -71,7 +72,7 @@ export class KarelDebugger {
     }
 
     Step() {
-        const runtime = this.world.runtime();
+        const runtime = this.world.runtime;
         runtime.step();
         if (this.lines.length > runtime.state.line) {
             const pascal = /\@saltatela/g

@@ -88,13 +88,11 @@ program
     }
 });
 program
-    .command('debugger')
+    .command('debugger <source> <world>')
     .option('--debug', 'enables debug output')
-    .option('-w, --world [world]', 'The world.in')
-    .option('-s, --source [source]', 'The Karel source code')
     .description('runs file')
-    .action(function (_, options) {
-    let source = fs.readFileSync(options.source, { encoding: 'utf-8' });
+    .action(function (sourcePath, worldPath, options) {
+    let source = fs.readFileSync(sourcePath, { encoding: 'utf-8' });
     let compiled = null;
     let rawSource = false;
     if (source.endsWith('.kx')) {
@@ -104,10 +102,17 @@ program
         compiled = compile(source);
         rawSource = true;
     }
-    let worldFile = fs.readFileSync(options.world, { encoding: 'utf-8' });
+    let worldFile = fs.readFileSync(worldPath, { encoding: 'utf-8' });
     let worldXml = new DOMParser().parseFromString(worldFile, 'text/xml');
     var world = new World(100, 100);
     world.load(worldXml);
+    world.runtime.debug = true;
+    world.runtime.load(compiled);
+    if (options.debug) {
+        world.runtime.addEventListener('debug', function (ev) {
+            console.log(ev.debugType, ev.message);
+        });
+    }
     const karelDebugger = new KarelDebugger(world, {
         code: rawSource ? source : undefined
     });
@@ -116,12 +121,18 @@ program
         output: process.stdout,
         prompt: '> '
     });
-    rl.prompt();
     karelDebugger.StartRun();
+    rl.prompt();
     rl.on('line', (line) => {
         const [command, ...args] = line.trim().split(' ');
         if (command === "step") {
             karelDebugger.Step();
+            rl.prompt();
+            return;
+        }
+        if (command === "exit") {
+            karelDebugger.Step();
+            process.exit(0);
             return;
         }
     });
