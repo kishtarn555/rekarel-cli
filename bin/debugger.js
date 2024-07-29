@@ -6,14 +6,75 @@ export class KarelDebugger {
         this.slowMode = (_b = options.slowMode) !== null && _b !== void 0 ? _b : -1;
         this.lines = options.code ? options.code.split('\n') : [];
         this.breakpoints = new Set();
+        this.autoStepInterval = 0;
+        this.futureStepping = false;
     }
     GetWorld() {
         return this.world;
     }
+    StartRun() {
+        this.world.reset();
+        let runtime = this.world.runtime;
+        runtime.disableStackEvents = false;
+        runtime.start();
+    }
     RunTillEnd() {
-        const runtime = this.world.runtime;
+        this.StopAutoStep();
         while (this.PerformAutoStep())
             ;
+    }
+    StopAutoStep() {
+        if (this.autoStepInterval !== 0) {
+            clearInterval(this.autoStepInterval);
+            this.autoStepInterval = 0;
+        }
+    }
+    StartAutoStep() {
+        this.autoStepInterval = window.setInterval(() => {
+            if (!this.world.runtime.running) {
+                this.StopAutoStep();
+                return;
+            }
+            if (this.futureStepping) {
+                //Is futureStepping, wait for it to end.
+                return;
+            }
+            this.Step();
+        }, this.delay);
+    }
+    Step() {
+        const runtime = this.world.runtime();
+        runtime.step();
+        if (this.lines.length > runtime.state.line) {
+            const pascal = /\@saltatela/g;
+            const java = /\@autoSkip/g;
+            const text = this.lines[runtime.state.line];
+            if (pascal.test(text) || java.test(text)) {
+                this.StepOut();
+            }
+        }
+    }
+    StepOut() {
+        this.futureStepping = true;
+        const runtime = this.world.runtime;
+        const startWStackSize = runtime.state.stackSize;
+        if (startWStackSize === 0) {
+            this.RunTillEnd();
+            return;
+        }
+        this.futureStepping = true;
+        while (this.PerformAutoStep() && runtime.state.stackSize >= startWStackSize)
+            ;
+        this.futureStepping = false;
+    }
+    StepOver() {
+        const runtime = this.world.runtime;
+        const startWStackSize = runtime.state.stackSize;
+        runtime.step();
+        if (runtime.state.stackSize > startWStackSize) {
+            while (this.PerformAutoStep() && runtime.state.stackSize > startWStackSize)
+                ;
+        }
     }
     SetBreakpoints(breakpoints) {
         this.breakpoints.clear();
