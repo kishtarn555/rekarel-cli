@@ -3,13 +3,23 @@
 "use strict";
 
 import { Command } from 'commander';
-import { javaParser, pascalParser, compile} from "@rekarel/core"
+import { javaParser, pascalParser, compile, World} from "@rekarel/core"
 import * as fs from 'fs';
 import * as path from 'path';
+import { DOMParser } from '@xmldom/xmldom';
 
 const program = new Command();
 
 
+function readStdin() {
+    return new Promise(function(resolve, reject) {
+      let chunks = [];
+      process.stdin
+        .setEncoding('utf-8')
+        .on('data', chunk => chunks.push(chunk))
+        .on('end', chunk => resolve(chunks.join('')));
+    });
+  }
 
 program.version("cli-1.0.0; rekarel-1.0.0");
 
@@ -42,6 +52,46 @@ program.command('compile')
             console.error(error);
         }
 
+    });
+
+program
+    .command('run <filename>')
+    .option('--debug','enables debug output')
+    .option('-w, --world [world]','If specified, it reads the world from the file, otherwise it reads from stdin')
+    .description('runs file')
+    .action(function(filename, options) {
+        var file = fs.readFileSync(filename, {encoding: 'utf-8'});
+        var compiled = null;
+        if (filename.endsWith('.kx')) {
+            compiled = JSON.parse(file);
+        } else {
+            compiled = compile(file);
+        }
+
+        function run(worldXml) {
+            var world = new World(100, 100);
+            world.load(worldXml);
+            if (options.debug) {
+                world.runtime.debug = true;
+                world.runtime.addEventListener('debug', function(ev) {
+                console.log(ev.debugType, ev.message);
+                });
+            }
+            world.runtime.load(compiled);
+            while (world.runtime.step());
+            console.log(world.output());
+        }
+        if (options.world) {
+            let file = fs.readFileSync(options.world, {encoding: 'utf-8'});
+            let worldXml = new DOMParser().parseFromString(file, 'text/xml');
+            run(worldXml);
+        } else {
+            readStdin()
+                .then(stdin => {
+                    let worldXml = new DOMParser().parseFromString(stdin as string, 'text/xml');
+                    run(worldXml);
+            });
+        }
     });
 
     
