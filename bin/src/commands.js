@@ -5,6 +5,7 @@ import { javaParser, pascalParser, compile, World } from "@rekarel/core";
 import * as fs from 'fs';
 import { DOMParser } from '@xmldom/xmldom';
 import { version } from "../package.json";
+import { RunResult } from './errors';
 const program = new Command();
 function readStdin() {
     return new Promise(function (resolve, reject) {
@@ -73,17 +74,22 @@ program
         else {
             console.log(world.output());
         }
+        if (world.runtime.state.error) {
+            console.log(world.runtime.state.error);
+            return RunResult[world.runtime.state.error];
+        }
+        return RunResult.OK;
     }
     if (options.input) {
         let file = fs.readFileSync(options.input, { encoding: 'utf-8' });
         let worldXml = new DOMParser().parseFromString(file, 'text/xml');
-        run(worldXml);
+        process.exit(run(worldXml));
     }
     else {
         readStdin()
             .then(stdin => {
             let worldXml = new DOMParser().parseFromString(stdin, 'text/xml');
-            run(worldXml);
+            process.exit(run(worldXml));
         });
     }
 });

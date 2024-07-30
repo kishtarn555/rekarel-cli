@@ -8,6 +8,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { DOMParser } from '@xmldom/xmldom';
 import {version} from "../package.json"
+import { RunResult } from './errors';
 const program = new Command();
 
 
@@ -82,16 +83,20 @@ program
             } else {
                 console.log(world.output());
             }
+            if (world.runtime.state.error) {
+                return RunResult[world.runtime.state.error];
+            }
+            return RunResult.OK;
         }
         if (options.input) {
             let file = fs.readFileSync(options.input, {encoding: 'utf-8'});
             let worldXml = new DOMParser().parseFromString(file, 'text/xml');
-            run(worldXml);
+            process.exit(run(worldXml));
         } else {
             readStdin()
                 .then(stdin => {
                     let worldXml = new DOMParser().parseFromString(stdin as string, 'text/xml');
-                    run(worldXml);
+                    process.exit(run(worldXml));
             });
         }
     });
