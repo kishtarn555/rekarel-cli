@@ -2,13 +2,13 @@
 
 "use strict";
 
-import { Command } from 'commander';
+import { Command, configureOutput } from 'commander';
 import { javaParser, pascalParser, compile, World} from "@rekarel/core"
 import * as fs from 'fs';
 import * as path from 'path';
 import { DOMParser } from '@xmldom/xmldom';
 import {version} from "../package.json"
-import { RunResult } from './errors';
+import { compilationError, RunResult } from './errors';
 const program = new Command();
 
 
@@ -40,14 +40,32 @@ program.command('compile')
                     break;
                 default:
                     console.error(`'${options.language}' is not recognized as a valid language. Options are 'pascal' or 'java'`);
+                    process.exit(-1);
             }
         }
         
         
         let output = options.output?? "a.kx";
-        let file = fs.readFileSync(source, {encoding: 'utf-8'});
-        let compiled=parser(file);
-        fs.writeFileSync(output, JSON.stringify(compiled));
+        let file = "";
+        try { 
+            file = fs.readFileSync(source, {encoding: 'utf-8'});
+        } catch(err) {
+            console.log("Error reading file: ", source);
+            process.exit(-1);
+        }
+        let compiled:any;
+        try {
+            compiled=parser(file);
+        } catch(err) {
+            compilationError(err);
+            process.exit(1);
+        }
+        try {
+            fs.writeFileSync(output, JSON.stringify(compiled));
+        } catch(err) {            
+            console.log("Error writing to file: ", output);
+            process.exit(-1);
+        }
         
 
     });
@@ -59,12 +77,26 @@ program
     .option('-o, --output [worldOut]','If specified, it writes the output to the file, otherwise it writes to stdout')
     .description('runs file')
     .action(function(filename, options) {
-        var file = fs.readFileSync(filename, {encoding: 'utf-8'});
+        var file = "";
+        try {
+            file = fs.readFileSync(filename, {encoding: 'utf-8'});
+        } catch(error) {
+            console.error("Error reading file", filename);
+            if (options.debug) {
+                console.error(error);
+            }
+            process.exit(-1)
+        }
         var compiled = null;
-        if (filename.endsWith('.kx')) {
-            compiled = JSON.parse(file);
-        } else {
-            compiled = compile(file);
+        try {
+            if (filename.endsWith('.kx')) {
+                compiled = JSON.parse(file);
+            } else {
+                compiled = compile(file);
+            }
+        } catch(err) {
+            compilationError(err);
+            process.exit(-1);
         }
 
         function run(worldXml) {
@@ -89,7 +121,13 @@ program
             return RunResult.OK;
         }
         if (options.input) {
-            let file = fs.readFileSync(options.input, {encoding: 'utf-8'});
+            let file = "";
+            try {
+                file = fs.readFileSync(options.input, {encoding: 'utf-8'});
+            } catch(err) {
+                console.error("Error reading world:", options.input);
+                process.exit(-1);
+            }
             let worldXml = new DOMParser().parseFromString(file, 'text/xml');
             process.exit(run(worldXml));
         } else {

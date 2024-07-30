@@ -7,4 +7,10 @@ export var RunResult;
     RunResult[RunResult["BAGUNDERFLOW"] = 4] = "BAGUNDERFLOW";
     RunResult[RunResult["STACK"] = 5] = "STACK";
 })(RunResult || (RunResult = {}));
+export function compilationError(err) {
+    console.error("Compilation error:", err.message);
+    if (err.hash) {
+        console.error(err.hash);
+    }
+}
 //# sourceMappingURL=errors.js.map
