@@ -2,25 +2,24 @@
 
 "use strict";
 
-import { Command, configureOutput } from 'commander';
-import { javaParser, pascalParser, compile, World} from "@rekarel/core"
+import { Command } from 'commander';
+import { javaParser, pascalParser, compile, World } from "@rekarel/core"
 import * as fs from 'fs';
-import * as path from 'path';
 import { DOMParser } from '@xmldom/xmldom';
-import {version} from "../package.json"
+import { version } from "../package.json"
 import { compilationError, RunResult } from './errors';
 const program = new Command();
 
 
 function readStdin() {
-    return new Promise(function(resolve, reject) {
-      let chunks = [];
-      process.stdin
-        .setEncoding('utf-8')
-        .on('data', chunk => chunks.push(chunk))
-        .on('end', chunk => resolve(chunks.join('')));
+    return new Promise(function (resolve, reject) {
+        let chunks = [];
+        process.stdin
+            .setEncoding('utf-8')
+            .on('data', chunk => chunks.push(chunk))
+            .on('end', chunk => resolve(chunks.join('')));
     });
-  }
+}
 
 program.version(version);
 
@@ -28,10 +27,10 @@ program.command('compile')
     .arguments('<source>')
     .option('-l, --language <type>')
     .option('-o, --output [target]')
-    .action((source, options)=> {
+    .action((source, options) => {
         let parser = compile;
         if (options.language) {
-            switch(options.language) {
+            switch (options.language) {
                 case "java":
                     parser = javaParser;
                     break;
@@ -43,44 +42,44 @@ program.command('compile')
                     process.exit(-1);
             }
         }
-        
-        
-        let output = options.output?? "a.kx";
+
+
+        let output = options.output ?? "a.kx";
         let file = "";
-        try { 
-            file = fs.readFileSync(source, {encoding: 'utf-8'});
-        } catch(err) {
+        try {
+            file = fs.readFileSync(source, { encoding: 'utf-8' });
+        } catch (err) {
             console.log("Error reading file: ", source);
             process.exit(-1);
         }
-        let compiled:any;
+        let compiled: any;
         try {
-            compiled=parser(file);
-        } catch(err) {
+            compiled = parser(file);
+        } catch (err) {
             compilationError(err);
             process.exit(1);
         }
         try {
             fs.writeFileSync(output, JSON.stringify(compiled));
-        } catch(err) {            
+        } catch (err) {
             console.log("Error writing to file: ", output);
             process.exit(-1);
         }
-        
+
 
     });
 
 program
     .command('run <filename>')
-    .option('--debug','enables debug output')
-    .option('-i, --input [worldIn]','If specified, it reads the world from the file, otherwise it reads from stdin')
-    .option('-o, --output [worldOut]','If specified, it writes the output to the file, otherwise it writes to stdout')
+    .option('--debug', 'enables debug output')
+    .option('-i, --input [worldIn]', 'If specified, it reads the world from the file, otherwise it reads from stdin')
+    .option('-o, --output [worldOut]', 'If specified, it writes the output to the file, otherwise it writes to stdout')
     .description('runs file')
-    .action(function(filename, options) {
+    .action(function (filename, options) {
         var file = "";
         try {
-            file = fs.readFileSync(filename, {encoding: 'utf-8'});
-        } catch(error) {
+            file = fs.readFileSync(filename, { encoding: 'utf-8' });
+        } catch (error) {
             console.error("Error reading file", filename);
             if (options.debug) {
                 console.error(error);
@@ -94,7 +93,7 @@ program
             } else {
                 compiled = compile(file);
             }
-        } catch(err) {
+        } catch (err) {
             compilationError(err);
             process.exit(-1);
         }
@@ -104,8 +103,8 @@ program
             world.load(worldXml);
             if (options.debug) {
                 world.runtime.debug = true;
-                world.runtime.addEventListener('debug', function(ev) {
-                console.log(ev.debugType, ev.message);
+                world.runtime.addEventListener('debug', function (ev) {
+                    console.log(ev.debugType, ev.message);
                 });
             }
             world.runtime.load(compiled);
@@ -123,8 +122,8 @@ program
         if (options.input) {
             let file = "";
             try {
-                file = fs.readFileSync(options.input, {encoding: 'utf-8'});
-            } catch(err) {
+                file = fs.readFileSync(options.input, { encoding: 'utf-8' });
+            } catch (err) {
                 console.error("Error reading world:", options.input);
                 process.exit(-1);
             }
@@ -135,9 +134,9 @@ program
                 .then(stdin => {
                     let worldXml = new DOMParser().parseFromString(stdin as string, 'text/xml');
                     process.exit(run(worldXml));
-            });
+                });
         }
     });
 
-    
+
 program.parse(process.argv);
