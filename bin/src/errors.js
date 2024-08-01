@@ -7,9 +7,9 @@ export var RunResult;
     RunResult[RunResult["STACK"] = 19] = "STACK";
     RunResult[RunResult["INSTRUCTION"] = 48] = "INSTRUCTION";
     RunResult[RunResult["INSTRUCTION_LEFT"] = 49] = "INSTRUCTION_LEFT";
-    RunResult[RunResult["INSTRUCTION_FORWARD"] = 49] = "INSTRUCTION_FORWARD";
-    RunResult[RunResult["INSTRUCTION_PICK"] = 50] = "INSTRUCTION_PICK";
-    RunResult[RunResult["INSTRUCTION_LEAVE"] = 51] = "INSTRUCTION_LEAVE";
+    RunResult[RunResult["INSTRUCTION_FORWARD"] = 50] = "INSTRUCTION_FORWARD";
+    RunResult[RunResult["INSTRUCTION_PICK"] = 51] = "INSTRUCTION_PICK";
+    RunResult[RunResult["INSTRUCTION_LEAVE"] = 52] = "INSTRUCTION_LEAVE";
 })(RunResult || (RunResult = {}));
 export function compilationError(err) {
     console.error("Compilation error:", err.message);
