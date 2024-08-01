@@ -115,7 +115,18 @@ program
                 console.log(world.output());
             }
             if (world.runtime.state.error) {
-                return RunResult[world.runtime.state.error];
+                const error:string = world.runtime.state.error;
+                if (
+                    error === "INSTRUCTION" && 
+                    world.runtime.state.plus &&
+                    world.runtime.state.plus.instruction
+                ) {
+                    const detailed_error=`${error}_${world.runtime.state.plus.instruction}`;
+                    if (RunResult[detailed_error]) {
+                        return RunResult[detailed_error];
+                    }
+                }
+                return RunResult[error];
             }
             return RunResult.OK;
         }
