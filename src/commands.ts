@@ -3,7 +3,7 @@
 "use strict";
 
 import { Command } from 'commander';
-import { javaParser, pascalParser, compile, World } from "@rekarel/core"
+import { javaCompiler, pascalCompiler, compile, World } from "@rekarel/core"
 import * as fs from 'fs';
 import { DOMParser } from '@xmldom/xmldom';
 import { version } from "../package.json"
@@ -32,10 +32,10 @@ program.command('compile')
         if (options.language) {
             switch (options.language) {
                 case "java":
-                    parser = javaParser;
+                    parser = javaCompiler;
                     break;
                 case "pascal":
-                    parser = pascalParser;
+                    parser = javaCompiler;
                     break;
                 default:
                     console.error(`'${options.language}' is not recognized as a valid language. Options are 'pascal' or 'java'`);
@@ -103,8 +103,8 @@ program
             world.load(worldXml);
             if (options.debug) {
                 world.runtime.debug = true;
-                world.runtime.addEventListener('debug', function (ev) {
-                    console.log(ev.debugType, ev.message);
+                world.runtime.eventController.addEventListener('debug', function (ev) {
+                    console.log(ev.details.debugType, ev.details.message);
                 });
             }
             world.runtime.load(compiled);
@@ -118,10 +118,10 @@ program
                 const error:string = world.runtime.state.error;
                 if (
                     error === "INSTRUCTION" && 
-                    world.runtime.state.plus &&
-                    world.runtime.state.plus.instruction
+                    world.runtime.state.errorData &&
+                    world.runtime.state.errorData.type === "INSTRUCTION"
                 ) {
-                    const detailed_error=`${error}_${world.runtime.state.plus.instruction}`;
+                    const detailed_error=`${error}_${world.runtime.state.errorData.instruction}`;
                     if (RunResult[detailed_error]) {
                         return RunResult[detailed_error];
                     }
