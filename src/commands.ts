@@ -52,9 +52,9 @@ program.command('compile')
             console.log("Error reading file: ", source);
             process.exit(-1);
         }
-        let compiled: any;
+        let compiled: ReturnType<typeof parser>[0]; // FIXME: This is a temporary hack to obtain the type RawProgram, this should be public in the core!
         try {
-            compiled = parser(file);
+            compiled = parser(file)[0];
         } catch (err) {
             compilationError(err);
             process.exit(1);
