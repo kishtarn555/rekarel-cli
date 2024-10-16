@@ -52,9 +52,9 @@ program.command('compile')
             console.log("Error reading file: ", source);
             process.exit(-1);
         }
-        let compiled: any;
+        let compiled: ReturnType<typeof parser>[0]; // FIXME: This is a temporary hack to obtain the type RawProgram, this should be public in the core!
         try {
-            compiled = parser(file);
+            compiled = parser(file)[0];
         } catch (err) {
             compilationError(err);
             process.exit(1);
@@ -104,6 +104,10 @@ program
             if (options.debug) {
                 world.runtime.debug = true;
                 world.runtime.eventController.addEventListener('debug', function (ev) {
+                    if (ev.details.type !=="debug") {
+                        //This should never happen!
+                        return;
+                    }
                     console.log(ev.details.debugType, ev.details.message);
                 });
             }
