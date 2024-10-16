@@ -25,5 +25,8 @@
   },
   "bin": {
     "rekarel": "dist/commands.cjs"
+  },
+  "engines": {
+    "node": ">=15.0.0"
   }
 }
