@@ -35,7 +35,7 @@ program.command('compile')
                     parser = javaCompiler;
                     break;
                 case "pascal":
-                    parser = javaCompiler;
+                    parser = pascalCompiler;
                     break;
                 default:
                     console.error(`'${options.language}' is not recognized as a valid language. Options are 'pascal' or 'java'`);

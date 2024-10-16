@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 import { Command } from 'commander';
-import { javaCompiler, compile, World } from "@rekarel/core";
+import { javaCompiler, pascalCompiler, compile, World } from "@rekarel/core";
 import * as fs from 'fs';
 import { DOMParser } from '@xmldom/xmldom';
 import { version } from "../package.json";
@@ -30,7 +30,7 @@ program.command('compile')
                 parser = javaCompiler;
                 break;
             case "pascal":
-                parser = javaCompiler;
+                parser = pascalCompiler;
                 break;
             default:
                 console.error(`'${options.language}' is not recognized as a valid language. Options are 'pascal' or 'java'`);
