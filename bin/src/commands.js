@@ -99,6 +99,10 @@ program
         if (options.debug) {
             world.runtime.debug = true;
             world.runtime.eventController.addEventListener('debug', function (ev) {
+                if (ev.details.type !== "debug") {
+                    //This should never happen!
+                    return;
+                }
                 console.log(ev.details.debugType, ev.details.message);
             });
         }
