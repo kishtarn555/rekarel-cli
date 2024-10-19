@@ -4,7 +4,7 @@ echo ====== TEST PASCAL ======
 ROOT="$(git rev-parse --show-toplevel)"
 
 
-for problem in "${ROOT}/test/test-suite/"*; do
+for problem in "${ROOT}/test/test-suite/problems/"*; do
 	problem_name=$(basename "${problem}")
 
 	npx rekarel compile "${problem}/solution.kp" -o "${ROOT}/bin/${problem_name}.kx"
