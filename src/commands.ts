@@ -126,6 +126,7 @@ program
                     world.runtime.state.errorData.type === "INSTRUCTION"
                 ) {
                     const detailed_error=`${error}_${world.runtime.state.errorData.instruction}`;
+                    console.error(detailed_error)
                     if (RunResult[detailed_error]) {
                         return RunResult[detailed_error];
                     }
