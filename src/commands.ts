@@ -7,7 +7,7 @@ import { javaCompiler, pascalCompiler, compile, World } from "@rekarel/core"
 import * as fs from 'fs';
 import { DOMParser } from '@xmldom/xmldom';
 import { version } from "../package.json"
-import { compilationError, RunResult } from './errors';
+import { compilationError, RunResult, sendErrorResultToStderr } from './errors';
 const program = new Command();
 
 
@@ -120,6 +120,7 @@ program
             }
             if (world.runtime.state.error) {
                 const error:string = world.runtime.state.error;
+                sendErrorResultToStderr(error);
                 return RunResult[error];
             }
             return RunResult.OK;
