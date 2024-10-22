@@ -7,7 +7,7 @@ ROOT="$(git rev-parse --show-toplevel)"
 for problem in "${ROOT}/test/test-suite/problems/"*; do
 	problem_name=$(basename "${problem}")
 
-	npx rekarel compile "${problem}/solution.kp" -o "${ROOT}/bin/${problem_name}.kx"
+	npx rekarel compile "${problem}/solution.kj" -o "${ROOT}/bin/${problem_name}.kx"
 
     echo -n "${problem_name} .................. RUNING                      "
     start_time=$(date +%s)
