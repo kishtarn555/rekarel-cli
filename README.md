@@ -61,4 +61,4 @@ Compiles a source code into a .kx file, Karel's bytecode
 
 ### Arguments
 * `-l` `--language` If set, it tries to compile to the specified target language. If not, the compiler attempts to detect the language.
-* `-o` `--output` If set, it compiles to the target file, if not, it generates a file named `a.kp`
+* `-o` `--output` If set, it compiles to the target file, if not, it generates a file named `a.kx`
