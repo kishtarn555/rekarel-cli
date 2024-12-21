@@ -22,7 +22,7 @@ Shows the version of the rekarel command.
 
 ## Run
 
-`rekarel run <filename> [-i world.in] [-o world.out]`
+`rekarel run <filename> [-i world.in] [-o world.out] [-e major.minor]`
 
 Runs a filename (if it has extension .kx it runs it directly, otherwise it compiles it first) and outputs the world.out to stdout
 
@@ -30,7 +30,9 @@ Runs a filename (if it has extension .kx it runs it directly, otherwise it compi
 
 * `-i` If a world.in is not supplied, it reads the world from stdin, but if specified, then it reads the file.
 
-* `-o `If a world.out is not supplied, it prints the output to stdout, but if specidied, then it writes to the path provided.
+* `-o `If a world.out is not supplied, it prints the output to stdout, but if specified, then it writes to the path provided.
+
+* `-e ` Takes a expected version on the format of 'major'.'minor' and fails if the version does not match.
 
 **Behaviour**
 
