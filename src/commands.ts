@@ -2,7 +2,7 @@
 
 "use strict";
 
-import { Command } from 'commander';
+import { Command, option } from 'commander';
 import { javaCompiler, pascalCompiler, compile, World } from "@rekarel/core"
 import * as fs from 'fs';
 import { DOMParser } from '@xmldom/xmldom';
@@ -27,7 +27,21 @@ program.command('compile')
     .arguments('<source>')
     .option('-l, --language <type>')
     .option('-o, --output [target]')
+    .option('-e, --expected-version [target]')
     .action((source, options) => {
+
+        if (options.expectedVersion) {
+            let expectedMajor = options.expectedVersion.split('.')[0];
+            let expectedMinor = options.expectedVersion.split('.')[1];
+            let actualMajor = version.split('.')[0];
+            let actualMinor = version.split('.')[1];
+
+            if (expectedMajor !== actualMajor || expectedMinor !== actualMinor) {
+                console.error(`Expected version ${expectedMajor}.${expectedMinor}.x, but the actual version is ${version}`);
+                process.exit(2);
+            }
+        }
+
         let parser = compile;
         if (options.language) {
             switch (options.language) {
